@@ -1,8 +1,5 @@
 name: docker build and push
-on: 
-  pull_request:
-    paths:
-      - 'pyhelloworld/pyproject.toml'
+on: pull_request
 jobs:
   docker_build:
     runs-on: ubuntu-latest
