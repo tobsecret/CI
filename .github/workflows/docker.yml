@@ -5,6 +5,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Build docker image
-        run: cd pyhelloworld && docker build .
+        run: cd CI/pyhelloworld && docker build .
 
  
