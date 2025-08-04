@@ -5,6 +5,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: login
+        run: docker login quay.io -u {{QUAY_USER}} -p {{QUAY_PASSWORD}}
       - name: Build docker image
         run: cd pyhelloworld && docker build .
  
