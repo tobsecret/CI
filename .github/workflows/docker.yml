@@ -9,7 +9,7 @@ jobs:
         env:
           quay_user: ${{ secrets.QUAY_USER }}
           quay_password: ${{ secrets.QUAY_PASSWORD }}
-        run: echo "$quay_password" > docker login quay.io -u --password-stdin
+        run: echo "$quay_password" | docker login quay.io -u --password-stdin
       - name: Build docker image
         run: cd pyhelloworld && docker build .
  
