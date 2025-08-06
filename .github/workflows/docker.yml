@@ -5,4 +5,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: echo tag
-        run: echo "quay.io/${{ vars.QUAY_ORG }}/${{github.repository}}:${{github.sha}}"
+        run: echo "quay.io/${{ vars.QUAY_ORG }}/${{github.event.repository.name}}:${{github.sha}}"
