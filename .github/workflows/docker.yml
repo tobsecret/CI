@@ -16,9 +16,13 @@ jobs:
         uses: docker/setup-buildx-action@v3
         with:
           platforms: linux/amd64
+      - id: lowercase_tags
+        uses: ASzc/change-string-case-action@v6
+        with:
+          string: quay.io/${{ vars.QUAY_ORG }}/${{github.event.repository.name}}:${{github.sha}}
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
           context: "{{defaultContext}}:pyhelloworld"
           push: true
-          tags:  quay.io/${{ vars.QUAY_ORG }}/${{github.event.repository.name}}:${{github.sha}}
+          tags: ${{ steps.lowercase_tags.outputs.lowercase }}
