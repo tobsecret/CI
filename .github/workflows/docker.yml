@@ -4,15 +4,10 @@ jobs:
   docker_build:
     runs-on: ubuntu-latest
     steps:
-      -
-        uses: actions/checkout@v5
-      -
-        id: pyproject_toml_sha
-        run: |
-          set -o pipefail
-          sha256sum pyhelloworld/pyproject.toml | cut -f1 -d" " >> "$GITHUB_OUTPUT"
       - 
-        run:
-          echo ${{join(steps.pyproject_toml_sha.outputs.*, '\n')}}
+        run: |
+          export FOO=bar
+          echo "::set-env name=FOO::$FOO"
+      - run: echo $FOO
 
       
