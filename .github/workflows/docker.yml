@@ -4,25 +4,15 @@ jobs:
   docker_build:
     runs-on: ubuntu-latest
     steps:
-      - name: Login to Quay.io
-        uses: docker/login-action@v3
-        with:
-          registry: quay.io
-          username:  ${{ secrets.QUAY_USER }}
-          password: ${{ secrets.QUAY_PASSWORD }}
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-        with:
-          platforms: linux/amd64
-      - id: lowercase_tags
-        uses: ASzc/change-string-case-action@v6
-        with:
-          string: quay.io/${{ vars.QUAY_ORG }}/${{github.event.repository.name}}:${{github.sha}}
-      - name: Build and push
-        uses: docker/build-push-action@v6
-        with:
-          context: "{{defaultContext}}:pyhelloworld"
-          push: true
-          tags: ${{ steps.lowercase_tags.outputs.lowercase }}
+      -
+        uses: actions/checkout@v5
+      -
+        id: pyproject_toml_sha
+        run: |
+          set -o pipefail
+          sha256sum pyhelloworld/pyproject.toml | cut -f1 -d" " >> "$GITHUB_OUTPUT"
+      - 
+        run:
+          echo ${{join(steps.pyproject_toml_sha.outputs.*, '\n')}}
+
+      
