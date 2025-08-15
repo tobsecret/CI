@@ -7,7 +7,7 @@ jobs:
       - 
         run: |
           export FOO=bar
-          echo "::set-env name=FOO::$FOO"
-      - run: echo $FOO
+          echo "FOO=$FOO" >> $GITHUB_ENV
+      - run: echo "$FOO"
 
       
