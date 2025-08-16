@@ -27,13 +27,6 @@ jobs:
       - name: tag exists
         run: |
           regctl tag ls ${{ steps.lowercase_tags.outputs.lowercase }}
-          TAG_EXISTS=$(regctl tag ls ${{ steps.lowercase_tags.outputs.lowercase }} | grep -q ${{steps.pyproject_toml_sha.outputs.PYPROJECT_TOML_SHA}})
-          if [ "$TAG_EXISTS" = true ]
-            then
-              echo "TAG_EXISTS=true" >> "$GITHUB_ENV"
-            else
-              echo "TAG_EXISTS=false" >> "$GITHUB_ENV"
-          fi
           
             
 
