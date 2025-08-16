@@ -26,6 +26,7 @@ jobs:
           string: quay.io/${{ vars.QUAY_ORG }}/${{github.event.repository.name}}:${{steps.pyproject_toml_sha.outputs.PYPROJECT_TOML_SHA}}
       - name: tag exists
         run: |
+          regctl tag ls ${{ steps.lowercase_tags.outputs.lowercase }}
           TAG_EXISTS=$(regctl tag ls ${{ steps.lowercase_tags.outputs.lowercase }} | grep -q ${{steps.pyproject_toml_sha.outputs.PYPROJECT_TOML_SHA}})
           if [ "$TAG_EXISTS" = true ]
             then
