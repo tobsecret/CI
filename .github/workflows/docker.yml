@@ -25,6 +25,7 @@ jobs:
         with:
           string: quay.io/${{ vars.QUAY_ORG }}/${{github.event.repository.name}}:${{steps.pyproject_toml_sha.outputs.PYPROJECT_TOML_SHA}}
       - name: tag exists
+        id: tag_exists
         run: |
           if regctl tag ls ${{ steps.lowercase_tags.outputs.lowercase }} | grep -q ${{steps.pyproject_toml_sha.outputs.PYPROJECT_TOML_SHA}}
             then
@@ -34,13 +35,25 @@ jobs:
               echo "TAG_EXISTS=false"
               echo "TAG_EXISTS=false" >> "$GITHUB_OUTPUT"
           fi
-
-
-            
-
-
+      - name: runs if TAG_EXISTS is the boolean false
+        if: steps.tag_exists.outputs.TAG_EXISTS == false
+        run: |
+          echo "TAG_EXISTS is the boolean false"
+      - name: runs if TAG_EXISTS is the string false
+        if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
+        run: |
+          echo "TAG_EXISTS is the string false"
+      - name: runs if TAG_EXISTS is the boolean true
+        if: steps.tag_exists.outputs.TAG_EXISTS == true
+        run: |
+          echo "TAG_EXISTS is the boolean true"
+      - name: runs if TAG_EXISTS is the string true
+        if: steps.tag_exists.outputs.TAG_EXISTS == 'true'
+        run: |
+          echo "TAG_EXISTS is the string true"
       # - name: Login to quay.io
       #   uses: docker/login-action@v3
+      #   if: steps.tag_exists.outputs.TAG_EXISTS == true
       #   with:
       #     registry: quay.io
       #     username: ${{ secrets.QUAY_USER }}
