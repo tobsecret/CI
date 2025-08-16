@@ -4,15 +4,52 @@ jobs:
   docker_build:
     runs-on: ubuntu-latest
     steps:
-      -
-        uses: actions/checkout@v5
-      -
-        id: pyproject_toml_sha
+      - uses: actions/checkout@v5
+      - name: Calculate pyproject.toml SHA
         run: |
           set -o pipefail
           PYPROJECTTOMLSHA=$(sha256sum pyhelloworld/pyproject.toml | cut -f1 -d" ")
           echo "PYPROJECTTOMLSHA=$PYPROJECTTOMLSHA" >> "$GITHUB_ENV"
-      - 
-        run:
-          echo $PYPROJECTTOMLSHA
-      
+      - name: Install regctl
+        uses: regclient/actions/regctl-installer@main
+      - name: regctl login to quay.io
+        uses: regclient/actions/regctl-login@main
+        with:
+          registry: quay.io
+          username: ${{ secrets.QUAY_USER }}
+          password: ${{ secrets.QUAY_PASSWORD }}
+      - id: lowercase_tags
+        uses: ASzc/change-string-case-action@v6
+        with:
+          string: quay.io/${{ vars.QUAY_ORG }}/${{github.event.repository.name}}:${{github.env.PYPROJECTTOMLSHA}}
+      - name: tag exists
+        run: |
+          TAG_EXISTS=$(regctl tag ls ${{ steps.lowercase_tags.outputs.lowercase }} | grep -q $PYPROJECTTOMLSHA)
+          if [ "$TAG_EXISTS" = true ]
+            then
+              echo "TAG_EXISTS=true" >> "$GITHUB_ENV"
+            else
+              echo "TAG_EXISTS=false" >> "$GITHUB_ENV"
+          fi
+          
+            
+
+
+      # - name: Login to quay.io
+      #   uses: docker/login-action@v3
+      #   with:
+      #     registry: quay.io
+      #     username: ${{ secrets.QUAY_USER }}
+      #     password: ${{ secrets.QUAY_PASSWORD }}
+      # - name: Set up QEMU
+      #   uses: docker/setup-qemu-action@v3
+      # - name: Set up Docker Buildx
+      #   uses: docker/setup-buildx-action@v3
+      #   with:
+      #     platforms: linux/amd64
+      # - name: Build and push
+      #   uses: docker/build-push-action@v6
+      #   with:
+      #     context: "{{defaultContext}}:pyhelloworld"
+      #     push: true
+      #     tags: ${{ steps.lowercase_tags.outputs.lowercase }}
