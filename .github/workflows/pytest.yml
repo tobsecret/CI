@@ -24,6 +24,8 @@ jobs:
       - name: pytest
         run: |
           docker pull ${{steps.lowercase_tags.outputs.lowercase}}
-          
+          docker run -dit --name pytestcontainer --mount type=bind,src=.,dst=/CI ${{steps.lowercase_tags.outputs.lowercase}}
+          docker exec pytestcontainer uv run pytest /CI/pyhelloworld
+
 
 
