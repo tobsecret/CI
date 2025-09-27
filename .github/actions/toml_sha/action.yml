@@ -1,0 +1,13 @@
+name: compute toml_sha
+description: computes the sha of the pyproject.toml file
+runs:
+  using: composite
+
+  steps:
+    - name: Calculate pyproject.toml SHA
+      id: pyproject_toml_sha
+      run: |
+        set -o pipefail
+        PYPROJECT_TOML_SHA=$(sha256sum pyhelloworld/pyproject.toml | cut -f1 -d" ")
+        echo "PYPROJECT_TOML_SHA=$PYPROJECT_TOML_SHA" >> "$GITHUB_OUTPUT"
+      shell: bash

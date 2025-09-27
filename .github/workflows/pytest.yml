@@ -7,10 +7,7 @@ jobs:
       - uses: actions/checkout@v5
       - name: Calculate pyproject.toml SHA
         id: pyproject_toml_sha
-        run: |
-          set -o pipefail
-          PYPROJECT_TOML_SHA=$(sha256sum pyhelloworld/pyproject.toml | cut -f1 -d" ")
-          echo "PYPROJECT_TOML_SHA=$PYPROJECT_TOML_SHA" >> "$GITHUB_OUTPUT"
+        uses: ./.github/actions/toml_sha
       - id: lowercase_tags
         uses: ASzc/change-string-case-action@v6
         with:
@@ -26,6 +23,3 @@ jobs:
           docker pull ${{steps.lowercase_tags.outputs.lowercase}}
           docker run -dit --name pytestcontainer --mount type=bind,src=.,dst=/CI ${{steps.lowercase_tags.outputs.lowercase}}
           docker exec pytestcontainer uv run pytest /CI/pyhelloworld
-
-
-
