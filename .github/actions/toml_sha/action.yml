@@ -1,5 +1,9 @@
-name: compute toml_sha
-description: computes the sha of the pyproject.toml file
+name: "compute toml_sha"
+description: "computes the SHA of the pyproject.toml file"
+outputs:
+  pyproject_toml_sha:
+    description: "SHA of pyproject.toml file"
+    value: ${{steps.pyproject_toml_sha.outputs.PYPROJECT_TOML_SHA}}
 runs:
   using: composite
 
