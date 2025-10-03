@@ -1,7 +1,7 @@
 name: pytest
 on:
   workflow_run:
-    workflows: [docker build and push]
+    workflows: ["docker build and push"]
     types: [completed]
 
 jobs:
