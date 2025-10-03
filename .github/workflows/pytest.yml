@@ -1,0 +1,29 @@
+name: pytest
+on:
+  workflow_run:
+    workflows: ["docker build and push"]
+    types: [completed]
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Calculate pyproject.toml SHA
+        id: pyproject_toml_sha
+        uses: ./.github/actions/toml_sha
+      - id: lowercase_tags
+        uses: ASzc/change-string-case-action@v6
+        with:
+          string: quay.io/${{ vars.QUAY_ORG }}/${{github.event.repository.name}}:${{steps.pyproject_toml_sha.outputs.pyproject_toml_sha}}
+      - name: Login to quay.io
+        uses: docker/login-action@v3
+        with:
+          registry: quay.io
+          username: ${{ secrets.QUAY_USER }}
+          password: ${{ secrets.QUAY_PASSWORD }}
+      - name: pytest
+        run: |
+          docker pull ${{steps.lowercase_tags.outputs.lowercase}}
+          docker run -dit --name pytestcontainer --mount type=bind,src=.,dst=/CI ${{steps.lowercase_tags.outputs.lowercase}}
+          docker exec pytestcontainer uv run pytest /CI/pyhelloworld
