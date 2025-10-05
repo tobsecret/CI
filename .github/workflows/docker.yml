@@ -4,7 +4,10 @@ jobs:
   docker_build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      # - uses: actions/checkout@v5
+      - name: echo lmao
+        run: |
+          echo lmao
       # - name: Install regctl
       #   uses: regclient/actions/regctl-installer@main
       # - name: regctl login to quay.io
