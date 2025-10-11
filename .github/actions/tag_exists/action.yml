@@ -1,7 +1,7 @@
 name: "tag exists"
 description: "Checks whether an image with a tag exists on registry"
 inputs:
-  image_tag:
+  tag:
     description: "The image tag to be checked"
     required: true
   registry:
@@ -9,10 +9,10 @@ inputs:
     default: quay.io
   username:
     description: "The username for the registry"
-    default: ${{ secrets.QUAY_USER }}
+    required: true
   password:
     description: "The password associated with the username at the registry"
-    default: ${{ secrets.QUAY_PASSWORD }}
+    required: true
 
 outputs:
   tag_exists:
