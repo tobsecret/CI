@@ -1,9 +1,5 @@
 name: pytest
-on:
-  workflow_run:
-    workflows: ["docker build and push"]
-    types:
-      - completed
+on: pull_request
 
 jobs:
   docker_build:

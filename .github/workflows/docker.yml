@@ -1,5 +1,5 @@
 # name: docker build and push
-# on: workflow_dispatch
+# on: pull_request
 # jobs:
 #   docker_build:
 #     runs-on: ubuntu-latest
