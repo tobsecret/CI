@@ -49,3 +49,8 @@ runs:
       run: |
         echo "TAG_EXISTS=${{steps.tag_exists.outputs.TAG_EXISTS}}"
       shell: bash
+    - name: run_if_true
+      if: ${{steps.tag_exists.outputs.TAG_EXISTS == 'true'}}
+      run: |
+        echo "it do be true"
+      shell: bash
