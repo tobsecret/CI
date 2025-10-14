@@ -45,3 +45,7 @@ runs:
             echo "TAG_EXISTS=false" >> "$GITHUB_OUTPUT"
         fi
       shell: bash
+    - name: verify_output
+      run: |
+        echo "TAG_EXISTS=${{steps.tag_exists.outputs.TAG_EXISTS}}"
+      shell: bash
