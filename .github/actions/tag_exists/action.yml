@@ -51,6 +51,8 @@ runs:
       shell: bash
     - name: run_if_true
       if: ${{steps.tag_exists.outputs.TAG_EXISTS == 'true'}}
+      env:
+        CUSTOM_BOOLEAN: ${{steps.tag_exists.outputs.TAG_EXISTS == 'true'}}
       run: |
-        echo "it do be true"
+        echo "it do be true and the value of the boolean is $CUSTOM_BOOLEAN"
       shell: bash
