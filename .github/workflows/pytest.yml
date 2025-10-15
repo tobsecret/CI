@@ -22,7 +22,7 @@ jobs:
           password: ${{ secrets.QUAY_PASSWORD }}
           tag: ${{ steps.lowercase_tags.outputs.lowercase }}
       - name: verify tag exists output
-        if: ! steps.tag_exists.outputs.tag_exists
+        if: ${{!steps.tag_exists.outputs.tag_exists}}
         env:
           CUSTOM_BOOLEAN: ${{!steps.tag_exists.outputs.tag_exists}}
         run: |
