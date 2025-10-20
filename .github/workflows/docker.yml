@@ -1,59 +1,44 @@
-# name: docker build and push
-# on: pull_request
-# jobs:
-#   docker_build:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - uses: actions/checkout@v5
-#       - name: Install regctl
-#         uses: regclient/actions/regctl-installer@main
-#       - name: regctl login to quay.io
-#         uses: regclient/actions/regctl-login@main
-#         with:
-#           registry: quay.io
-#           username: ${{ secrets.QUAY_USER }}
-#           password: ${{ secrets.QUAY_PASSWORD }}
-#       - name: Calculate pyproject.toml SHA
-#         id: pyproject_toml_sha
-#         run: |
-#           set -o pipefail
-#           PYPROJECT_TOML_SHA=$(sha256sum pyhelloworld/pyproject.toml | cut -f1 -d" ")
-#           echo "PYPROJECT_TOML_SHA=$PYPROJECT_TOML_SHA" >> "$GITHUB_OUTPUT"
-
-#       - id: lowercase_tags
-#         uses: ASzc/change-string-case-action@v6
-#         with:
-#           string: quay.io/${{ vars.QUAY_ORG }}/${{github.event.repository.name}}:${{steps.pyproject_toml_sha.outputs.PYPROJECT_TOML_SHA}}
-#       - name: tag exists
-#         id: tag_exists
-#         run: |
-#           if regctl tag ls ${{ steps.lowercase_tags.outputs.lowercase }} | grep -q ${{steps.pyproject_toml_sha.outputs.PYPROJECT_TOML_SHA}}
-#             then
-#               echo "TAG_EXISTS=true"
-#               echo "TAG_EXISTS=true" >> "$GITHUB_OUTPUT"
-#             else
-#               echo "TAG_EXISTS=false"
-#               echo "TAG_EXISTS=false" >> "$GITHUB_OUTPUT"
-#           fi
-#       - name: Login to quay.io
-#         uses: docker/login-action@v3
-#         if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
-#         with:
-#           registry: quay.io
-#           username: ${{ secrets.QUAY_USER }}
-#           password: ${{ secrets.QUAY_PASSWORD }}
-#       - name: Set up QEMU
-#         uses: docker/setup-qemu-action@v3
-#         if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
-#       - name: Set up Docker Buildx
-#         uses: docker/setup-buildx-action@v3
-#         with:
-#           platforms: linux/amd64
-#         if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
-#       - name: Build and push
-#         uses: docker/build-push-action@v6
-#         with:
-#           context: "{{defaultContext}}:pyhelloworld"
-#           push: true
-#           tags: ${{ steps.lowercase_tags.outputs.lowercase }}
-#         if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
+name: docker build and push
+on: pull_request
+jobs:
+    docker_build:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v5
+            - name: Calculate pyproject.toml SHA
+              id: pyproject_toml_sha
+              uses: ./.github/actions/toml_sha
+            - id: lowercase_tags
+              uses: ASzc/change-string-case-action@v6
+              with:
+                  string: quay.io/${{ vars.QUAY_ORG }}/${{github.event.repository.name}}:${{steps.pyproject_toml_sha.outputs.PYPROJECT_TOML_SHA}}
+            - name: tag exists
+              id: tag_exists
+              uses: ./.github/actions/tag_exists
+              with:
+                  registry: quay.io
+                  username: ${{ secrets.QUAY_USER }}
+                  password: ${{ secrets.QUAY_PASSWORD }}
+                  tag: ${{ steps.lowercase_tags.outputs.lowercase }}
+            - name: Login to quay.io
+              uses: docker/login-action@v3
+              if: ${{!steps.tag_exists.outputs.tag_exists}}
+              with:
+                  registry: quay.io
+                  username: ${{ secrets.QUAY_USER }}
+                  password: ${{ secrets.QUAY_PASSWORD }}
+            - name: Set up QEMU
+              uses: docker/setup-qemu-action@v3
+              if: ${{!steps.tag_exists.outputs.tag_exists}}
+            - name: Set up Docker Buildx
+              uses: docker/setup-buildx-action@v3
+              with:
+                  platforms: linux/amd64
+              if: ${{!steps.tag_exists.outputs.tag_exists}}
+            - name: Build and push
+              uses: docker/build-push-action@v6
+              with:
+                  context: "{{defaultContext}}:pyhelloworld"
+                  push: true
+                  tags: ${{ steps.lowercase_tags.outputs.lowercase }}
+              if: ${{!steps.tag_exists.outputs.tag_exists}}
