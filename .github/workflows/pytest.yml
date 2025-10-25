@@ -45,12 +45,14 @@ jobs:
   #       if: ${{!steps.tag_exists.outputs.tag_exists}}
 
   pytest:
+    name: run pytest
     runs-on: ubuntu-latest
     steps:
       - name: Wait for build to succeed or be skipped
         uses: lewagon/wait-on-check-action@v1.4.1
         with:
           ref: ${{ github.ref }}
+          running-workflow-name: pytest
           check-name: "docker build test image"
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           wait-interval: 10
