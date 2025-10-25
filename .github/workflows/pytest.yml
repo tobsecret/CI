@@ -53,7 +53,7 @@ jobs:
         with:
           ref: ${{ github.ref }}
           running-workflow-name: pytest
-          check-name: "docker build test image"
+          check-name: "docker"
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           wait-interval: 10
       - uses: actions/checkout@v5
