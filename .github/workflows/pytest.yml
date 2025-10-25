@@ -48,15 +48,15 @@ jobs:
     name: run pytest
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v5
       - name: Wait for build to succeed or be skipped
         uses: lewagon/wait-on-check-action@v1.4.1
         with:
           ref: ${{ github.ref }}
           running-workflow-name: pytest
-          check-name: "docker"
+          check-name: docker
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           wait-interval: 10
-      - uses: actions/checkout@v5
       - name: Calculate pyproject.toml SHA
         id: pyproject_toml_sha
         uses: ./.github/actions/toml_sha
