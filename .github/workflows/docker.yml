@@ -9,6 +9,8 @@ jobs:
       - name: Calculate pyproject.toml SHA
         id: pyproject_toml_sha
         uses: ./.github/actions/toml_sha
+        with:
+          path: ${{github.event.repository.name}}/pyproject.toml
       - id: lowercase_tags
         uses: ASzc/change-string-case-action@v6
         with:

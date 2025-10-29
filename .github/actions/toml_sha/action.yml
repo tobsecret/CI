@@ -4,6 +4,11 @@ outputs:
   pyproject_toml_sha:
     description: "SHA of pyproject.toml file"
     value: ${{steps.pyproject_toml_sha.outputs.PYPROJECT_TOML_SHA}}
+inputs:
+  pyproject_toml_path:
+    description: "The path to the pyproject.toml file"
+    required: true
+
 runs:
   using: composite
 
@@ -12,7 +17,7 @@ runs:
       id: pyproject_toml_sha
       run: |
         set -o pipefail
-        PYPROJECT_TOML_SHA=$(sha256sum ${{inputs.event.repository.name}}/pyproject.toml | cut -f1 -d" ")
+        PYPROJECT_TOML_SHA=$(sha256sum ${{ inputs.pyproject_toml_path }} | cut -f1 -d" ")
         echo "PYPROJECT_TOML_SHA=$PYPROJECT_TOML_SHA" >> "$GITHUB_OUTPUT"
         echo "$PYPROJECT_TOML_SHA"
       shell: bash
