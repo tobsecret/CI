@@ -39,10 +39,11 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
-          context: "{{defaultContext}}:pyhelloworld"
+          context: "{{defaultContext}}:${{github.event.repository.name}}"
           push: true
           tags: ${{ steps.lowercase_tags.outputs.lowercase }}
-        if: ${{!steps.tag_exists.outputs.tag_exists}}
+        # if: ${{!steps.tag_exists.outputs.tag_exists}}
+        if: false
 
   pytest:
     name: run pytest
@@ -66,4 +67,4 @@ jobs:
         run: |
           docker pull ${{steps.lowercase_tags.outputs.lowercase}}
           docker run -dit --name pytestcontainer --mount type=bind,src=.,dst=/CI ${{steps.lowercase_tags.outputs.lowercase}}
-          docker exec pytestcontainer uv run pytest /CI/pyhelloworld
+          docker exec pytestcontainer uv run pytest /CI/${{github.event.repository.name}}

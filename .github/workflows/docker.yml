@@ -39,7 +39,8 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
-          context: "{{defaultContext}}:pyhelloworld"
+          context: "{{defaultContext}}:${{github.event.repository.name}}"
           push: true
           tags: ${{ steps.lowercase_tags.outputs.lowercase }}
-        if: ${{!steps.tag_exists.outputs.tag_exists}}
+        # if: ${{!steps.tag_exists.outputs.tag_exists}}
+        if: false
