@@ -1,0 +1,23 @@
+name: "compute sha"
+description: "computes the SHA of the input file"
+outputs:
+  sha:
+    description: "SHA of input file"
+    value: ${{steps.calculate_sha.outputs.OUTPUT_SHA}}
+inputs:
+  path:
+    description: "The path to the file for which to compute the SHA"
+    required: true
+
+runs:
+  using: composite
+
+  steps:
+    - name: Calculate SHA
+      id: calculate_sha
+      run: |
+        set -o pipefail
+        OUTPUT_SHA=$(sha256sum ${{ inputs.path }} | cut -f1 -d" ")
+        echo "OUTPUT_SHA=$OUTPUT_SHA" >> "$GITHUB_OUTPUT"
+        echo "$OUTPUT_SHA"
+      shell: bash

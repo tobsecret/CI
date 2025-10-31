@@ -35,9 +35,9 @@ runs:
         password: ${{ inputs.password }}
     - name: Calculate pyproject.toml SHA
       id: pyproject_toml_sha
-      uses: ./.github/actions/toml_sha
+      uses: ./.github/actions/sha
       with:
-        pyproject_toml_path: ${{ inputs.pyproject_toml_path }}
+        path: ${{ inputs.pyproject_toml_path }}
     - name: tag exists
       id: tag_exists
       run: |
