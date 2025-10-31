@@ -1,4 +1,4 @@
-from pyhelloworld import main
+from CI import main
 
 
 def test_main():
