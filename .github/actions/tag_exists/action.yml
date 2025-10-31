@@ -13,6 +13,9 @@ inputs:
   password:
     description: "The password associated with the username at the registry"
     required: true
+  pyproject_toml_path:
+    description: "The path to the pyproject.toml file"
+    required: true
 
 outputs:
   tag_exists:
@@ -33,6 +36,8 @@ runs:
     - name: Calculate pyproject.toml SHA
       id: pyproject_toml_sha
       uses: ./.github/actions/toml_sha
+      with:
+        pyproject_toml_path: ${{ inputs.pyproject_toml_path }}
     - name: tag exists
       id: tag_exists
       run: |
