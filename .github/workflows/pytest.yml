@@ -105,4 +105,4 @@ jobs:
           echo running
           docker run -dit --name pytestcontainer --mount type=bind,src=.,dst=/CI ${{steps.lowercase_tags.outputs.lowercase}}
           echo executing
-          docker exec pytestcontainer ruff /CI/${{github.event.repository.name}}
+          docker exec pytestcontainer ruff check /CI/${{github.event.repository.name}}
