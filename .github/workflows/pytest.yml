@@ -48,7 +48,7 @@ jobs:
         if: ${{steps.tag_exists.outputs.tag_exists == 'false'}}
 
   pytest:
-    name: run pytest
+    name: pytest
     runs-on: ubuntu-latest
     needs: docker_build
     steps:
@@ -78,7 +78,7 @@ jobs:
           docker exec pytestcontainer uv run pytest /CI/${{github.event.repository.name}}
 
   ruff-lint:
-    name: run ruff python linting
+    name: ruff python linting
     runs-on: ubuntu-latest
     needs: docker_build
     steps:
@@ -106,3 +106,33 @@ jobs:
           docker run -dit --name pytestcontainer --mount type=bind,src=.,dst=/CI ${{steps.lowercase_tags.outputs.lowercase}}
           echo executing
           docker exec pytestcontainer ruff check /CI/${{github.event.repository.name}}
+
+  pyright-typecheck:
+    name: pyright python typechecking
+    runs-on: ubuntu-latest
+    needs: docker_build
+    steps:
+      - uses: actions/checkout@v5
+      - name: Calculate pyproject.toml SHA
+        id: pyproject_toml_sha
+        uses: ./.github/actions/sha
+        with:
+          path: ${{github.event.repository.name}}/pyproject.toml ${{github.event.repository.name}}/Dockerfile
+      - id: lowercase_tags
+        uses: ASzc/change-string-case-action@v6
+        with:
+          string: quay.io/${{ vars.QUAY_ORG }}/${{github.event.repository.name}}:${{steps.pyproject_toml_sha.outputs.sha}}
+      - name: Login to quay.io
+        uses: docker/login-action@v3
+        with:
+          registry: quay.io
+          username: ${{ secrets.QUAY_USER }}
+          password: ${{ secrets.QUAY_PASSWORD }}
+      - name: pyright-typecheck
+        run: |
+          echo pulling
+          docker pull ${{steps.lowercase_tags.outputs.lowercase}}
+          echo running
+          docker run -dit --name pytestcontainer --mount type=bind,src=.,dst=/CI ${{steps.lowercase_tags.outputs.lowercase}}
+          echo executing
+          docker exec pytestcontainer pyright /CI/${{github.event.repository.name}}
