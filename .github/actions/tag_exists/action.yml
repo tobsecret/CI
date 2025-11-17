@@ -41,7 +41,7 @@ runs:
     - name: tag exists
       id: tag_exists
       run: |
-        if regctl tag ls ${{ inputs.tag }} | grep -q ${{steps.pyproject_toml_sha.outputs.PYPROJECT_TOML_SHA}}
+        if regctl tag ls ${{ inputs.tag }} | grep -q ${{steps.pyproject_toml_sha.outputs.sha}}
           then
             echo "TAG_EXISTS=true"
             echo "TAG_EXISTS=true" >> "$GITHUB_OUTPUT"
