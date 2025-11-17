@@ -107,8 +107,8 @@ jobs:
           echo executing
           docker exec pytestcontainer ruff check /CI/${{github.event.repository.name}}
 
-  pyright-typecheck:
-    name: pyright python typechecking
+  mypy-typecheck:
+    name: mypy python typechecking
     runs-on: ubuntu-latest
     needs: docker_build
     steps:
@@ -128,11 +128,11 @@ jobs:
           registry: quay.io
           username: ${{ secrets.QUAY_USER }}
           password: ${{ secrets.QUAY_PASSWORD }}
-      - name: pyright-typecheck
+      - name: mypy-typecheck
         run: |
           echo pulling
           docker pull ${{steps.lowercase_tags.outputs.lowercase}}
           echo running
           docker run -dit --name pytestcontainer --mount type=bind,src=.,dst=/CI ${{steps.lowercase_tags.outputs.lowercase}}
           echo executing
-          docker exec pytestcontainer pyright /CI/${{github.event.repository.name}}
+          docker exec pytestcontainer mypy /CI/${{github.event.repository.name}}
