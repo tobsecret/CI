@@ -23,7 +23,7 @@ jobs:
           username: ${{ secrets.QUAY_USER }}
           password: ${{ secrets.QUAY_PASSWORD }}
           tag: ${{ steps.lowercase_tags.outputs.lowercase }}
-          pyproject_toml_path: ${{github.event.repository.name}}/pyproject.toml ${{github.event.repository.name}}/Dockerfile
+          sha_path: ${{github.event.repository.name}}/pyproject.toml ${{github.event.repository.name}}/Dockerfile
       - name: Login to quay.io
         uses: docker/login-action@v3
         if: ${{steps.tag_exists.outputs.tag_exists == 'false'}}

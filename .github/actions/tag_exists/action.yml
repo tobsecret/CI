@@ -13,7 +13,7 @@ inputs:
   password:
     description: "The password associated with the username at the registry"
     required: true
-  pyproject_toml_path:
+  sha_path:
     description: "The path to the pyproject.toml file"
     required: true
 
@@ -37,7 +37,7 @@ runs:
       id: pyproject_toml_sha
       uses: ./.github/actions/sha
       with:
-        path: ${{ inputs.pyproject_toml_path }}
+        path: ${{ inputs.sha_path }}
     - name: tag exists
       id: tag_exists
       run: |
