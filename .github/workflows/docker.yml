@@ -12,7 +12,7 @@ jobs:
         with:
           path: ${{github.event.repository.name}}/pyproject.toml
       - id: lowercase_tags
-        uses: ASzc/change-string-case-action@v6
+        uses: ./.github/actions/change_string_case
         with:
           string: quay.io/${{ vars.QUAY_ORG }}/${{github.event.repository.name}}:${{steps.pyproject_toml_sha.outputs.sha}}
       - name: tag exists

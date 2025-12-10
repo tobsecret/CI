@@ -12,7 +12,7 @@ jobs:
         with:
           path: ${{github.event.repository.name}}/pyproject.toml ${{github.event.repository.name}}/Dockerfile
       - id: lowercase_tags
-        uses: ASzc/change-string-case-action@v6
+        uses: ./.github/actions/change_string_case
         with:
           string: quay.io/${{ vars.QUAY_ORG }}/${{github.event.repository.name}}:${{steps.pyproject_toml_dockerfile_sha.outputs.sha}}
       - name: tag exists
@@ -59,7 +59,7 @@ jobs:
         with:
           path: ${{github.event.repository.name}}/pyproject.toml ${{github.event.repository.name}}/Dockerfile
       - id: lowercase_tags
-        uses: ASzc/change-string-case-action@v6
+        uses: ./.github/actions/change_string_case
         with:
           string: quay.io/${{ vars.QUAY_ORG }}/${{github.event.repository.name}}:${{steps.pyproject_toml_dockerfile_sha.outputs.sha}}
       - name: Login to quay.io
@@ -89,7 +89,7 @@ jobs:
         with:
           path: ${{github.event.repository.name}}/pyproject.toml ${{github.event.repository.name}}/Dockerfile
       - id: lowercase_tags
-        uses: ASzc/change-string-case-action@v6
+        uses: ./.github/actions/change_string_case
         with:
           string: quay.io/${{ vars.QUAY_ORG }}/${{github.event.repository.name}}:${{steps.pyproject_toml_dockerfile_sha.outputs.sha}}
       - name: Login to quay.io
@@ -119,7 +119,7 @@ jobs:
         with:
           path: ${{github.event.repository.name}}/pyproject.toml ${{github.event.repository.name}}/Dockerfile
       - id: lowercase_tags
-        uses: ASzc/change-string-case-action@v6
+        uses: ./.github/actions/change_string_case
         with:
           string: quay.io/${{ vars.QUAY_ORG }}/${{github.event.repository.name}}:${{steps.pyproject_toml_dockerfile_sha.outputs.sha}}
       - name: Login to quay.io

@@ -1,0 +1,27 @@
+name: "change string case"
+description: "takes a string and "
+outputs:
+  lowercase:
+    description: "lower case string"
+    value: ${{steps.change_string_case.outputs.lowercase}}
+  uppercase:
+    description: "upper case string"
+    value: ${{steps.change_string_case.outputs.uppercase}}
+inputs:
+  string:
+    description: "input string"
+    required: true
+
+runs:
+  using: composite
+
+  steps:
+    - name: Change string case
+      id: change_string_case
+      run: |
+        set -o pipefail
+        LOWERCASE=$( echo "${{ inputs.string }}" | awk '{print tolower($0)}')
+        UPPERCASE=$( echo "${{ inputs.string }}" | awk '{print toupper($0)}')
+        echo "lowercase=$LOWERCASE" >> "$GITHUB_OUTPUT"
+        echo "uppercase=$UPPERCASE" >> "$GITHUB_OUTPUT"
+      shell: bash
